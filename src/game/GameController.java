@@ -1,15 +1,14 @@
 package game;
 
+import game.ai.MatrixAI;
+import game.ai.RandomAI;
+
 public class GameController {
-
-    public GameController(){
-
-    }
 
     public static void main(String[] args){
 
-        Game g = new Game(RandomAI.class, RandomAI.class, 8000, 1);
-        g.startGameSeries(20);
+        Game g = new Game(RandomAI.class, MatrixAI.class, 8000, 1);
+        g.startGameSeries(100);
 
     }
 

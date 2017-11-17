@@ -3,8 +3,10 @@ package game;
 import szte.mi.Move;
 import szte.mi.Player;
 
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.Buffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -49,7 +51,13 @@ public class Game {
             playerOne.init(0, playerOneTime, random);
             playerTwo.init(1, playerTwoTime, random);
 
-            int tmp = startNewGame(playerOne, playerTwo);
+            int tmp = -1;
+
+            try {
+                tmp = startNewGame(playerOne, playerTwo, null);
+            } catch(IOException e){
+                e.printStackTrace();
+            }
 
             if(results.containsKey(tmp)){
                 results.put(tmp, results.get(tmp) + 1);
@@ -81,9 +89,17 @@ public class Game {
         return null;
     }
     
-    public int startNewGame(Player playerOne, Player playerTwo){
+    public int startNewGame(Player playerOne, Player playerTwo, File logfile) throws IOException{
 
-        Utils.printInfo("New Game started..");
+        BufferedWriter bw = null;
+
+        if(logfile != null) {
+            bw = new BufferedWriter(new FileWriter(logfile));
+        }
+
+        if(bw != null) {
+            bw.write("New Game started..");
+        }
 
         long playerOneTimeInternal = playerOneTime;
         long playerTwoTimeInternal = playerTwoTime;
@@ -110,15 +126,17 @@ public class Game {
                 oldMoveNullCount = 0;
             }
 
-            model.printBitBoard();
+            //model.printBitBoard();
 
-            Utils.printInfo("Current Player:\t"+currentPlayer);
+            if(bw != null) {
+                bw.write("Current Player:\t" + currentPlayer);
+            }
 
             if(currentPlayer == 1){
 
                 HashMap<Long, Long> possibleMoves = model.getPossibleMoves(model.boardPlayer, model.boardEnemy, false);
 
-                model.printPossibleMoves(possibleMoves);
+                //model.printPossibleMoves(possibleMoves);
 
                 long startTime = System.currentTimeMillis();
                 Move move = playerOne.nextMove(oldMove, playerTwoTime, playerOneTime);
@@ -126,7 +144,9 @@ public class Game {
 
                 if(move != null) {
 
-                    Utils.printInfo("Chosen Move:\t[" + move.x + "-" + move.y + "]");
+                    if(bw != null) {
+                        bw.write("Chosen Move:\t[" + move.x + "-" + move.y + "]");
+                    }
 
                     long moveAsBinary = model.getBinaryForCoords(move.x, move.y);
                     long timeTook = endTime - startTime;
@@ -143,7 +163,7 @@ public class Game {
                         break;
                     }
 
-                    model.printToFlip(possibleMoves.get(moveAsBinary));
+                    //model.printToFlip(possibleMoves.get(moveAsBinary));
 
                     model.makeMovePlayer(moveAsBinary, possibleMoves.get(moveAsBinary));
 
@@ -155,7 +175,7 @@ public class Game {
 
                 HashMap<Long, Long> possibleMoves = model.getPossibleMoves(model.boardEnemy, model.boardPlayer, false);
 
-                model.printPossibleMoves(possibleMoves);
+                //model.printPossibleMoves(possibleMoves);
 
                 long startTime = System.currentTimeMillis();
                 Move move = playerTwo.nextMove(oldMove, playerOneTime, playerTwoTime);
@@ -163,7 +183,9 @@ public class Game {
 
                 if(move != null) {
 
-                    Utils.printInfo("Chosen Move:\t[" + move.x + "-" + move.y + "]");
+                    if(bw != null) {
+                        bw.write("Chosen Move:\t[" + move.x + "-" + move.y + "]");
+                    }
 
                     long moveAsBinary = model.getBinaryForCoords(move.x, move.y);
                     long timeTook = endTime - startTime;
@@ -180,7 +202,7 @@ public class Game {
                         break;
                     }
 
-                    model.printToFlip(possibleMoves.get(moveAsBinary));
+                    //model.printToFlip(possibleMoves.get(moveAsBinary));
 
                     model.makeMoveEnemy(moveAsBinary);
 
@@ -201,10 +223,14 @@ public class Game {
         /* check if a player made an illegal move, 1 = playerOne, 0 = playerTwo */
         if(illegalMove != -1){
             if(illegalMove == 1){
-                System.out.println("Player One made an illegal move!");
+                if(bw != null) {
+                    bw.write("Player One made an illegal move!");
+                }
                 return 2;
             }else{
-                System.out.println("Player Two made an illegal move!");
+                if(bw != null) {
+                    bw.write("Player Two made an illegal move!");
+                }
                 return 1;
             }
         }
@@ -212,19 +238,25 @@ public class Game {
         /* check if a player timed out, 1 = playerOne, 0 = playerTwo */
         if(timedOut != -1){
             if(timedOut == 1){
-                System.out.println("Player One timed out!");
+                if(bw != null) {
+                    bw.write("Player One timed out!");
+                }
                 return 2;
             }else{
-                System.out.println("Player Two timed out!");
+                if(bw != null) {
+                    bw.write("Player Two timed out!");
+                }
                 return 1;
             }
         }
 
         int winner = model.getWinner(model.boardPlayer, model.boardEnemy);
 
-        System.out.println("THE WINNER IS "+winner);
+        if(bw != null) {
+            bw.write("THE WINNER IS " + winner);
+        }
 
-        model.printBitBoard();
+        //model.printBitBoard();
 
         return winner;
 
