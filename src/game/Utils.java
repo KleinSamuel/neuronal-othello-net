@@ -27,4 +27,8 @@ public class Utils {
         System.out.println("[ ERROR ]("+getDateString()+")\t"+s);
     }
 
+    public static double sigmoidValue(Double arg) {
+        return (1 / (1 + Math.exp(-arg)));
+    }
+
 }
