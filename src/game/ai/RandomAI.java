@@ -1,5 +1,7 @@
-package game;
+package game.ai;
 
+import game.Model;
+import game.Utils;
 import javafx.util.Pair;
 import szte.mi.Move;
 import szte.mi.Player;
