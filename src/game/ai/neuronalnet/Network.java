@@ -1,9 +1,10 @@
 package game.ai.neuronalnet;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Network {
+public class Network implements Serializable{
 
     private Random random;
 
@@ -36,7 +37,7 @@ public class Network {
 
     public void initOutputLayer(){
         for (int i = 0; i < 64; i++) {
-            outputLayer.add(new OutputNeuron(hiddenLayer));
+            outputLayer.add(new HiddenNeuron(random, hiddenLayer));
         }
     }
 
@@ -61,7 +62,7 @@ public class Network {
 
     public long getOutput(){
         for (int i = 0; i < outputLayer.size(); i++) {
-            OutputNeuron on = (OutputNeuron) outputLayer.get(i);
+            HiddenNeuron on = (HiddenNeuron) outputLayer.get(i);
             System.out.println("OutputNeuron at\t"+i+"\t:\t"+on.getOutput());
         }
 

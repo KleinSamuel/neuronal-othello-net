@@ -1,8 +1,9 @@
 package game.ai.neuronalnet;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class OutputNeuron implements Neuron {
+public class OutputNeuron implements Neuron,Serializable {
 
     private ArrayList<Neuron> inputNeurons;
 

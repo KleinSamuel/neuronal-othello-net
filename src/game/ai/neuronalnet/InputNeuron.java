@@ -1,6 +1,8 @@
 package game.ai.neuronalnet;
 
-public class InputNeuron implements Neuron{
+import java.io.Serializable;
+
+public class InputNeuron implements Neuron,Serializable {
 
     private int position;
 

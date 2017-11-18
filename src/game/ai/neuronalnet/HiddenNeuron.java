@@ -2,10 +2,11 @@ package game.ai.neuronalnet;
 
 import game.Utils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class HiddenNeuron implements Neuron {
+public class HiddenNeuron implements Neuron,Serializable {
 
     private Random random;
     private float MUTATION_RATE = 0.1f;
