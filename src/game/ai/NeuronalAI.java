@@ -1,7 +1,8 @@
-package game.ai.neuronalnet;
+package game.ai;
 
 import game.Model;
 import game.Utils;
+import game.ai.neuronalnet.Network;
 import szte.mi.Move;
 import szte.mi.Player;
 
@@ -10,14 +11,20 @@ import java.util.Random;
 public class NeuronalAI implements Player {
 
     private Model model;
+    private Network net;
 
     public NeuronalAI() {
-        Utils.printInfo("Greedy AI created");
+        Utils.printInfo("NeuronalNet AI created");
+    }
+
+    public NeuronalAI(String netFile){
+        this();
+        this.net = Utils.readNetworkFromDisk(netFile);
     }
 
     @Override
     public void init(int order, long t, Random rnd) {
-        Utils.printInfo("Random AI init method called [order="+order+"]");
+        Utils.printInfo("NeuronalNet AI init method called [order="+order+"]");
         this.model = new Model(order+1);
     }
 
@@ -29,7 +36,11 @@ public class NeuronalAI implements Player {
             model.makeMoveEnemy(enemyMove);
         }
 
-        return null;
+        net.setInput(model.boardPlayer, model.boardEnemy);
+        long moveBinary = net.getOutput();
+        int[] cords = model.getCoordsForBinary(moveBinary);
+
+        return new Move(cords[0], cords[1]);
 
     }
 
