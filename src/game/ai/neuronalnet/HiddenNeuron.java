@@ -9,7 +9,6 @@ import java.util.Random;
 public class HiddenNeuron implements Neuron,Serializable {
 
     private Random random;
-    private float MUTATION_RATE = 0.1f;
 
     private ArrayList<Neuron> inputNeurons;
 
@@ -25,14 +24,6 @@ public class HiddenNeuron implements Neuron,Serializable {
     public void initWeights(){
         for (int i = 0; i < inputNeurons.size(); i++) {
             weights.add(random.nextDouble());
-        }
-    }
-
-    public void adjustWeights(){
-        for (int i = 0; i < weights.size(); i++) {
-            if(random.nextFloat() <= MUTATION_RATE){
-                weights.set(i, random.nextDouble());
-            }
         }
     }
 

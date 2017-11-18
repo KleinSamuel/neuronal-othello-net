@@ -1,5 +1,8 @@
 package game.ai.neuronalnet;
 
+import com.dkriesel.snipe.core.NeuralNetwork;
+import com.dkriesel.snipe.core.NeuralNetworkDescriptor;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
@@ -37,14 +40,13 @@ public class Network implements Serializable{
 
     public void initOutputLayer(){
         for (int i = 0; i < 64; i++) {
-            outputLayer.add(new HiddenNeuron(random, hiddenLayer));
+            outputLayer.add(new OutputNeuron(random, hiddenLayer));
         }
     }
 
     public void mutateHiddenLayer(){
         for(Neuron n : hiddenLayer){
             HiddenNeuron hn = (HiddenNeuron) n;
-            hn.adjustWeights();
         }
     }
 
@@ -61,12 +63,34 @@ public class Network implements Serializable{
     }
 
     public long getOutput(){
-        for (int i = 0; i < outputLayer.size(); i++) {
-            HiddenNeuron on = (HiddenNeuron) outputLayer.get(i);
-            System.out.println("OutputNeuron at\t"+i+"\t:\t"+on.getOutput());
-        }
 
-        return 0L;
+        int outputPosition = -1;
+        double score = -1;
+
+        for (int i = 0; i < outputLayer.size(); i++) {
+            OutputNeuron on = (OutputNeuron) outputLayer.get(i);
+            //System.out.println("OutputNeuron at\t"+i+"\t:\t"+on.getOutput());
+            if(on.getOutput() > score){
+                score = on.getOutput();
+                outputPosition = i;
+            }
+        }
+        return (1L << outputPosition);
+    }
+
+    public ArrayList<Double> getOutputAsList(){
+        ArrayList<Double> list = new ArrayList<>();
+        for (int i = 0; i < outputLayer.size(); i++) {
+            OutputNeuron on = (OutputNeuron) outputLayer.get(i);
+            list.add(on.getOutput());
+        }
+        return list;
+    }
+
+    public ArrayList<Double> makeMove(long boardPlayer, long boardEnemy){
+        setInput(boardPlayer, boardEnemy);
+        ArrayList<Double> move = getOutputAsList();
+        return move;
     }
 
     public static void main(String[] args){
@@ -80,6 +104,7 @@ public class Network implements Serializable{
         net.getOutput();
         net.mutateHiddenLayer();
         net.getOutput();
+
 
     }
 
