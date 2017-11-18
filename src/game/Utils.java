@@ -20,7 +20,7 @@ public class Utils {
     }
 
     public static void printInfo(String s){
-        System.out.println("[ INFO ]("+getDateString()+")\t"+s);
+        //System.out.println("[ INFO ]("+getDateString()+")\t"+s);
     }
 
     public static void printError(String s){
@@ -30,5 +30,7 @@ public class Utils {
     public static double sigmoidValue(Double arg) {
         return (1 / (1 + Math.exp(-arg)));
     }
+
+    //ejwrapjefj#aweofwes
 
 }

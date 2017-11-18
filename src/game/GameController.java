@@ -8,7 +8,9 @@ public class GameController {
     public static void main(String[] args){
 
         Game g = new Game(RandomAI.class, MatrixAI.class, 8000, 1);
-        g.startGameSeries(100);
+        long a = System.currentTimeMillis();
+        g.startGameSeries(10000000);
+        System.out.println(System.currentTimeMillis()-a);
 
     }
 
